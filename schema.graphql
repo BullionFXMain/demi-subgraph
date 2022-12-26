@@ -1,0 +1,17 @@
+type Implementation @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  implementation: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NewChild @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  child: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
