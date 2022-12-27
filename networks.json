@@ -1,7 +1,8 @@
 {
   "mainnet": {
     "StakeFactory": {
-      "address": "0x5f140ea4e08d1af9f41fa4cf935fc7a98ef4fff8"
+      "address": "0x5f140ea4e08d1af9f41fa4cf935fc7a98ef4fff8",
+      "startBlock": 16209381
     }
   }
 }

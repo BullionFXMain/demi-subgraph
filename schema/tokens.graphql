@@ -1,0 +1,20 @@
+interface ERC20Interface @entity {
+  id: ID! #address of token
+  deployBlock: BigInt! #the block the contract was deployed
+  deployTimestamp: BigInt! #the timestamp the contract was deployed
+  symbol: String
+  totalSupply: BigInt!
+  decimals: Int
+  name: String
+}
+
+type ERC20 implements ERC20Interface @entity {
+  id: ID! #address of token
+  deployBlock: BigInt! #the block the contract was deployed
+  deployTimestamp: BigInt! #the timestamp the contract was deployed
+  symbol: String
+  totalSupply: BigInt!
+  decimals: Int
+  name: String
+  stakeContracts: [String!]
+}

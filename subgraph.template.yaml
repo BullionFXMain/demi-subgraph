@@ -1,0 +1,79 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  - kind: ethereum/contract
+    name: StakeFactory
+    network: { { network } }
+    source:
+      address: "{{ StakeFactory }}"
+      abi: StakeFactory
+      startBlock: { { StakeFactoryBlock } }
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StakeFactory
+        - StakeERC20
+      abis:
+        - name: StakeFactory
+          file: ./abis/stake/StakeFactory.json
+        - name: Stake
+          file: ./abis/stake/Stake.json
+      eventHandlers:
+        - event: NewChild(address,address)
+          handler: handleNewChild
+        - event: Implementation(address,address)
+          handler: handleImplementation
+      file: ./src/stake/StakeFactory.ts
+templates:
+  - kind: ethereum/contract
+    name: StakeERC20Template
+    network: mainnet
+    source:
+      abi: Stake
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StakeDeposit
+        - StakeERC20
+        - StakeHolder
+        - StakeWithdraw
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: Stake
+          file: ./abis/stake/Stake.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: Initialize(address,(address,uint256,string,string))
+          handler: handleInitialize
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/stake/Stake.ts
+  - kind: ethereum/contract
+    name: ERC20Template
+    network: mainnet
+    source:
+      abi: ERC20
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ERC20
+        - StakeERC20
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: Stake
+          file: ./abis/stake/Stake.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/erc20.ts

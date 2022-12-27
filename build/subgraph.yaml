@@ -1,0 +1,78 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: StakeFactory
+    network: mainnet
+    source:
+      address: "0x5f140ea4e08d1af9f41fa4cf935fc7a98ef4fff8"
+      abi: StakeFactory
+      startBlock: 16209381
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StakeFactory
+        - StakeERC20
+      abis:
+        - name: StakeFactory
+          file: StakeFactory\abis\stake\StakeFactory.json
+        - name: Stake
+          file: StakeFactory\abis\stake\Stake.json
+      eventHandlers:
+        - event: NewChild(address,address)
+          handler: handleNewChild
+        - event: Implementation(address,address)
+          handler: handleImplementation
+      file: StakeFactory\StakeFactory.wasm
+templates:
+  - kind: ethereum/contract
+    name: StakeERC20Template
+    network: mainnet
+    source:
+      abi: Stake
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StakeDeposit
+        - StakeERC20
+        - StakeHolder
+        - StakeWithdraw
+      abis:
+        - name: ERC20
+          file: StakeERC20Template\abis\ERC20.json
+        - name: Stake
+          file: StakeERC20Template\abis\stake\Stake.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: Initialize(address,(address,uint256,string,string))
+          handler: handleInitialize
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: templates\StakeERC20Template\StakeERC20Template.wasm
+  - kind: ethereum/contract
+    name: ERC20Template
+    network: mainnet
+    source:
+      abi: ERC20
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ERC20
+        - StakeERC20
+      abis:
+        - name: ERC20
+          file: ERC20Template\abis\ERC20.json
+        - name: Stake
+          file: ERC20Template\abis\stake\Stake.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: templates\ERC20Template\ERC20Template.wasm

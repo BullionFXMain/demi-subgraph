@@ -1,18 +1,26 @@
 {
   "name": "demi-subgraph-factory",
+  "description": "DeMi subgraph",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "generate-schema": "type schema\\* > schema.graphql",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ demi-subgraph-factory",
     "create-local": "graph create --node http://localhost:8020/ demi-subgraph-factory",
     "remove-local": "graph remove --node http://localhost:8020/ demi-subgraph-factory",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 demi-subgraph-factory",
-    "test": "graph test"
+    "test": "graph test",
+    "deploy-subgraph": "ts-node scripts/index.ts"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.37.1",
-    "@graphprotocol/graph-ts": "0.28.1"
+    "@graphprotocol/graph-ts": "0.28.1",
+    "commander": "^9.4.1",
+    "dotenv": "^16.0.3",
+    "mustache": "^4.2.0"
   },
-  "devDependencies": { "matchstick-as": "0.5.0" }
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
 }
