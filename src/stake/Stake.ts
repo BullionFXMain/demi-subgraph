@@ -74,7 +74,6 @@ export function handleTransfer(event: Transfer): void {
       stakeDeposit.timestamp = event.block.timestamp;
       stakeDeposit.tokenPoolSize = stakeERC20.tokenPoolSize;
       stakeDeposit.value = event.params.value;
-      stakeDeposit.depositedAmount = ZERO_BI;
       stakeDeposit.save();
 
       stakeERC20.save();
@@ -106,9 +105,6 @@ export function handleTransfer(event: Transfer): void {
       stakeHolder.address = event.params.to;
       stakeHolder.token = stakeERC20.token;
       stakeHolder.stakeToken = stakeERC20.id;
-
-      stakeHolder.totalStake = ZERO_BI;
-      stakeHolder.totalDeposited = ZERO_BI;
 
       stakeHolder.balance = stakeHolder.balance.plus(event.params.value);
       if (stakeERC20.totalSupply != ZERO_BI) {
@@ -145,6 +141,7 @@ export function getStakeDepositFromHash(txHash: string): StakeDeposit {
     // Does not exist but we have only the tx hash
     let _stakeDeposit = new StakeDeposit(txHash);
 
+    // Initializing with default values, to be filled in later
     _stakeDeposit.depositor = ZERO_ADDRESS;
     _stakeDeposit.stakeToken = ZERO_ADDRESS;
     _stakeDeposit.token = ZERO_ADDRESS;
@@ -153,6 +150,7 @@ export function getStakeDepositFromHash(txHash: string): StakeDeposit {
     _stakeDeposit.tokenPoolSize = ZERO_BI;
     _stakeDeposit.value = ZERO_BI;
     _stakeDeposit.depositedAmount = ZERO_BI;
+
     _stakeDeposit.save();
     return _stakeDeposit;
   }
@@ -167,6 +165,17 @@ export function getStakeWithdrawFromHash(txHash: string): StakeWithdraw {
   } else {
     // Does not exist but we have only the tx hash
     let _stakeWithdraw = new StakeWithdraw(txHash);
+
+    // Initializing with default values, to be filled in later
+    _stakeWithdraw.withdrawer = ZERO_ADDRESS;
+    _stakeWithdraw.stakeToken = ZERO_ADDRESS;
+    _stakeWithdraw.token = ZERO_ADDRESS;
+    _stakeWithdraw.stakeTokenBurned = ZERO_BI;
+    _stakeWithdraw.timestamp = ZERO_BI;
+    _stakeWithdraw.tokenPoolSize = ZERO_BI;
+    _stakeWithdraw.value = ZERO_BI;
+    _stakeWithdraw.returnedAmount = ZERO_BI;
+
     _stakeWithdraw.save();
     return _stakeWithdraw;
   }
@@ -179,14 +188,16 @@ export function getStakeHolder(holderId: string): StakeHolder {
     return _stakeHolder;
   } else {
     let _stakeHolder = new StakeHolder(holderId);
-    _stakeHolder.balance = ZERO_BI;
-    _stakeHolder.totalStake = ZERO_BI;
-    _stakeHolder.totalDeposited = ZERO_BI;
 
+    // Initializing with default values, to be filled in later
     _stakeHolder.address = Address.fromString(ZERO_ADDRESS);
     _stakeHolder.token = ZERO_ADDRESS;
+    _stakeHolder.balance = ZERO_BI;
     _stakeHolder.stakeToken = ZERO_ADDRESS;
+    _stakeHolder.totalStake = ZERO_BI;
+    _stakeHolder.totalDeposited = ZERO_BI;
     _stakeHolder.totalEntitlement = ZERO_BI;
+
     _stakeHolder.save();
     return _stakeHolder;
   }
